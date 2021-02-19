@@ -100,6 +100,10 @@ export default class DaysView extends View {
         el.className = this.daysOfWeekDisabled.includes(dow) ? 'dow disabled' : 'dow';
       });
     }
+
+    if (options.buddhistFormat !== undefined) {
+      this.buddhistFormat = options.buddhistFormat;
+    }
   }
 
   // Apply update on the focused date to view's settings
@@ -133,7 +137,19 @@ export default class DaysView extends View {
     // by beforeShow hook at previous render
     this.disabled = [...this.datesDisabled];
 
-    const switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
+    let switchLabel = formatDate(this.focused, this.switchLabelFormat, this.locale);
+
+    // format date to buddhist format
+    if (this.buddhistFormat) {
+      const date = new Date(this.focused)
+      const day = date.getDate()
+      const month = date.getMonth()
+      const year = date.getFullYear() + 543
+      const buddhistDate = new Date(year, month, day)
+
+      switchLabel = formatDate(buddhistDate.getTime(), this.switchLabelFormat, this.locale);
+    }
+
     this.picker.setViewSwitchLabel(switchLabel);
     this.picker.setPrevBtnDisabled(this.first <= this.minDate);
     this.picker.setNextBtnDisabled(this.last >= this.maxDate);

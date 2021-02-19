@@ -45,6 +45,10 @@ export default class YearsView extends View {
       const beforeShow = options[this.beforeShowOption];
       this.beforeShow = typeof beforeShow === 'function' ? beforeShow : undefined;
     }
+
+    if (options.buddhistFormat !== undefined) {
+      this.buddhistFormat = options.buddhistFormat;
+    }
   }
 
   // Update view's settings to reflect the viewDate set on the picker
@@ -80,7 +84,13 @@ export default class YearsView extends View {
     // by beforeShow hook at previous render
     this.disabled = [];
 
-    this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
+    // format date to buddhist format
+    if (this.buddhistFormat) {
+      this.picker.setViewSwitchLabel(`${this.first + 543}-${this.last + 543}`);
+    } else {
+      this.picker.setViewSwitchLabel(`${this.first}-${this.last}`);
+    }
+
     this.picker.setPrevBtnDisabled(this.first <= this.minYear);
     this.picker.setNextBtnDisabled(this.last >= this.maxYear);
 
